@@ -12,10 +12,9 @@ services:
     networks:
       - 'api'
     volumes:
-      - database
+      - database:/var/lib/mysql
     ports:
       - '3307:3307'
-    restart: 'always'
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       timeout: 1s
@@ -31,7 +30,6 @@ services:
       - './src/:/app/src'
     ports:
       - '3000:5000'
-    restart: 'always'
     networks:
       - 'api'
     env_file:
