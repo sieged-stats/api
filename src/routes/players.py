@@ -52,6 +52,17 @@ async def get_player_overview(username: str, db: Session = Depends(get_db)):
         "rank_icon", build_rank_icon(player.ranked_profile.rank)
     )
 
+    actual_progression = (
+        player.ranked_profile.rank_points - player.ranked_profile.prev_rank_points
+    )
+    needed_progression = (
+        player.ranked_profile.next_rank_points - player.ranked_profile.prev_rank_points
+    )
+
+    player.ranked_profile.__setattr__(
+        "rank_percentage", ((actual_progression / needed_progression) * 100)
+    )
+
     try:
         total_level_xp = player.xp_to_level_up + player.xp
         player.__setattr__("level_percentage", (player.xp / total_level_xp) * 100)

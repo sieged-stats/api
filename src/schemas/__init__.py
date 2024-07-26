@@ -27,6 +27,9 @@ class PlayerRankedProfile(BaseModel):
     rank: str
     rank_id: int
     rank_points: int
+    prev_rank_points: int
+    next_rank_points: int
+    rank_percentage: float
     rank_icon: str
 
 
