@@ -18,6 +18,7 @@ async def search(username: str, db: Session = Depends(get_db)):
     players = (
         db.query(models.Players)
         .filter(models.Players.name.ilike(f"%{username}%"))
+        .limit(5)
         .all()
     )
     player_list = [
