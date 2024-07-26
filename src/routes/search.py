@@ -26,12 +26,13 @@ async def search(username: str, db: Session = Depends(get_db)):
     ]
 
     try:
-        player = await auth.get_player(name=username)
-        player_list = [
-            schemas.PlayerSearchResult(
-                uid=player.uid, name=player.name, icon=player.profile_pic_url_146
-            )
-        ] + player_list
+        if not any(player.name == username for player in player_list):
+            player = await auth.get_player(name=username)
+            player_list = [
+                schemas.PlayerSearchResult(
+                    uid=player.uid, name=player.name, icon=player.profile_pic_url_146
+                )
+            ] + player_list
     except siegeapi.exceptions.InvalidRequest:
         pass
 
