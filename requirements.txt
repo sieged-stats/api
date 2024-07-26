@@ -1,0 +1,10 @@
+fastapi
+sqlalchemy
+uvicorn
+python-dotenv
+mysql
+pytest
+httpx
+pydantic
+structlog
+siegeapi
