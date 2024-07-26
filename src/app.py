@@ -5,7 +5,7 @@ from src.routes import router as index_router
 from src.routes.search import router as search_router
 from src.routes.players import router as player_router
 
-app = FastAPI()
+app = FastAPI(title="Sieged", version="0.1")
 
 app.add_middleware(
     CORSMiddleware,
