@@ -70,3 +70,44 @@ async def get_player_overview(username: str, db: Session = Depends(get_db)):
         player.__setattr__("level_percentage", 0.0)
 
     return schemas.PlayerOverview.model_validate(player)
+
+
+@router.get("/{username}/operators")
+async def get_player_operators(
+    username: str, sorted_by: str = None, db: Session = Depends(get_db)
+):
+    player = await get_player_or_not_found(username)
+
+    await player.load_operators()
+    operators = player.operators.all.attacker + player.operators.all.defender
+
+    if sorted_by is not None:
+        if len(operators) > 0 and sorted_by in operators[0].__dict__:
+            operators = sorted(
+                operators, key=lambda x: x.__getattribute__(sorted_by), reverse=True
+            )
+
+    return operators
+
+
+@router.get("/{username}/weapons")
+async def get_player_weaponss(
+    username: str, sorted_by: str = None, db: Session = Depends(get_db)
+):
+    player = await get_player_or_not_found(username)
+
+    await player.load_weapons()
+    weapons = (
+        player.weapons.all.attacker.primary
+        + player.weapons.all.attacker.secondary
+        + player.weapons.all.defender.primary
+        + player.weapons.all.defender.secondary
+    )
+
+    if sorted_by is not None:
+        if len(weapons) > 0 and sorted_by in weapons[0].__dict__:
+            weapons = sorted(
+                weapons, key=lambda x: x.__getattribute__(sorted_by), reverse=True
+            )
+
+    return weapons
