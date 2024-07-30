@@ -1,6 +1,7 @@
 from typing import Coroutine, Any
 
 import siegeapi
+from siegeapi.constants.seasons import seasons
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -19,7 +20,7 @@ async def get_player_or_not_found(
 ) -> Coroutine[Any, Any, siegeapi.Player]:
     try:
         return await auth.get_player(name=username)
-    except siegeapi.exceptions.InvalidRequest:
+    except siegeapi.exceptions.InvalidRequest as error:
         raise exceptions.notFound()
 
 
@@ -78,7 +79,7 @@ async def get_player_operators(
 ):
     player = await get_player_or_not_found(username)
 
-    await player.load_operators()
+    await player.load_operators(True)
     operators = player.operators.all.attacker + player.operators.all.defender
 
     if sorted_by is not None:
